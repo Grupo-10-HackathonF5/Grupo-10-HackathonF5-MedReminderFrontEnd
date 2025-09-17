@@ -1,11 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+import "./Card.css"
+const Card = () => {
+
+
+    return (
+        <main className="main">
+            <section className="greetingSection">
+                <p className="text">¡Hola Usuario!</p>
+                <p className="text">Fecha</p>
+            </section>
+
+
+            <section className="cardsSection">
+                <div className="card">
+                    <h2 className="cardTitle">Medicamento</h2>
+                    <p className="cardDosage">500mg</p>
+                </div>
+            </section>
+        </main>
+    );
+};
+
+
+export default Card;
