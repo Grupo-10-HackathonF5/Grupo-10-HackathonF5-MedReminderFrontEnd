@@ -1,77 +1,146 @@
+/* Importamos una tipografía más moderna desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Estilos generales para un look más limpio */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7f6;
+}
+
 .list-container {
-    width: 90%;
+    max-width: 1000px;
     margin: 2rem auto;
-    padding: 0 1rem;
-    font-family: Arial, sans-serif;
+    padding: 2rem;
 }
 
-h1 {
+.list-container h1 {
     text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
-    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #2c3e50;
 }
 
+/* Estilo principal de la tabla */
 table {
-    text-align: center;
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-    overflow: hidden;
-    margin: 0 auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    overflow: hidden; /* Para que el borde redondeado se aplique a la tabla */
 }
 
-thead {
-    background-color: #DDEDF8;
-    color: #000;
-   
-}
-
+/* Estilos para la cabecera de la tabla */
 thead th {
-    padding: 0.75rem;
-    text-align: center;
-    font-weight: bold;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #34495e;
+    background-color: #f8f9fa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+/* Estilos para las celdas del cuerpo de la tabla */
 tbody td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #ddd;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #ecf0f1;
+    color: #555;
+}
+
+tbody tr:last-child td {
+    border-bottom: none; /* Quitamos el borde de la última fila */
 }
 
 tbody tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f9fafb;
     transition: background-color 0.2s ease;
 }
 
-button {
-    padding: 0.4rem 0.8rem;
-    margin-right: 1rem;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 0.9rem;
+/* Estilos para los botones */
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
 }
 
-button:hover {
-    opacity: 0.75;
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px; /* Bordes más redondeados */
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
 
 button.delete-btn {
-    background-color: #FB8865;
-    color: black;
+    background-color: #DB3908;
+    color: white;
+}
+
+button.delete-btn:hover {
+    background-color: #DB3908;
+    transform: translateY(-2px);
 }
 
 button.edit-btn {
-    background-color: #5BAEE4;
-    color: black;
+    background-color: #0279C8;
+    color: white;
 }
 
-@media (max-width: 600px) {
-    table {
+button.edit-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Media query para móviles */
+@media (max-width: 768px) {
+    .list-container {
+        padding: 1rem;
+    }
+    
+    table, thead, tbody, th, td, tr {
         display: block;
-        overflow-x: auto;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    td:before {
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
         white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    /* Asignamos los títulos de cabecera a cada celda */
+    td:nth-of-type(1):before { content: "Nombre"; }
+    td:nth-of-type(2):before { content: "Dosis"; }
+    td:nth-of-type(3):before { content: "Notas"; }
+    td:nth-of-type(4):before { content: "Acciones"; }
+    
+    .actions-cell {
+        justify-content: flex-end;
     }
 }

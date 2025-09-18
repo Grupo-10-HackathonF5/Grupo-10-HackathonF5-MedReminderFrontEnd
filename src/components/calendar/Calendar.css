@@ -1,72 +1,74 @@
-/* Contenedor principal */
-.calendar {
-  padding: 24px;
+.agenda-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-/* Título principal */
-.calendar__title {
+.agenda-container h2, .agenda-container h3 {
   text-align: center;
-  margin: 0 0 24px 0;
-  color: #0D1846;
-  font-size: 24px;
-  font-weight: 700;
+  color: #333;
 }
 
-/* Cada sección (pasadas, futuras) */
-.calendar__section {
-  margin-bottom: 32px;
+.agenda-container h3 {
+  margin-top: 2rem;
+  color: #555;
+  font-weight: 400;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
 }
 
-.calendar__section h2 {
-  margin-bottom: 12px;
-  font-size: 18px;
-  color: #0D1846;
-  border-bottom: 2px solid #DDEDF8;
-  padding-bottom: 4px;
+.dose-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1rem 1.5rem;
+  margin: 0.75rem 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid; /* Borde de color para el estado */
+  transition: transform 0.2s ease-in-out;
 }
 
-/* Estilo de cada dosis */
-.dose {
+.dose-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Colores para el borde izquierdo */
+.past-dose {
+  border-left-color: #d9534f; /* Rojo para pasadas */
+}
+
+.future-dose {
+  border-left-color: #5cb85c; /* Verde para futuras */
+}
+
+.dose-info {
   display: flex;
   align-items: center;
-  gap: 14px;
-  background: #f3f4f6; /* gris claro por defecto */
-  border-radius: 10px;
-  padding: 12px;
-  margin: 8px 0;
-  transition: background 0.3s ease;
+  gap: 1.5rem;
 }
 
-/* Diferenciar pasadas y futuras */
-.calendar__section:first-of-type .dose {
-  background: #f9dcdc; /* rojo claro para pasadas */
-}
-.calendar__section:last-of-type .dose {
-  background: #dceafc; /* azul claro para futuras */
+.dose-time {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0056b3;
 }
 
-/* Hora de la toma */
-.dose__time {
-  font-weight: 800;
-  font-size: 16px;
-  width: 60px;
-  text-align: right;
-  color: #0D1846;
+.dose-name {
+  font-size: 1.1rem;
+  color: #333;
 }
 
-/* Texto de la info */
-.dose__info {
-  flex: 1;
-  font-size: 14px;
-  color: #111827;
+.dose-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
 }
 
-/* Hover */
-.dose:hover {
-  background: #e5e7eb;
-}
-.calendar__section:last-of-type .dose:hover {
-  background: #cfe2ff;
+.dose-status input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #0056b3;
 }
