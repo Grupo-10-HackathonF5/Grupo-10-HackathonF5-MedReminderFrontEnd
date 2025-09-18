@@ -13,7 +13,7 @@ export default function Footer() {
         </a>
 
         <div className="footer__copy">
-          <small>© {new Date().getFullYear()} Hackathon F5 — Group 10</small>
+          <strong>© {new Date().getFullYear()} Hackathon F5 — Grupo 10 </strong>
         </div>
       </div>
     </footer>
