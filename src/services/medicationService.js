@@ -1,30 +1,79 @@
-const KEY = "medications:v1";
+import axios from "axios";
 
-const read = () => JSON.parse(localStorage.getItem(KEY) || "[]");
-const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+const URL_API= "http://localhost:8080/api/medications";
+const userId = 1
 
-export const getMedications = async () => read();
+//Metodo GET para el READ
+//Para ver TODAS las Medicinas
+export const getAllMedication = async() => {
+    try {
+        const res = await axios.get(URL_API);
+        return res.data; 
+    } 
+    catch(error) {
+        console.error(`getAllMedications:`, error.message);
+        throw error;
+    }
+}
 
-export const createMedication = async (med) => {
-  const items = read();
-  const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString();
-  const newMed = { id, ...med };
-  items.push(newMed);
-  write(items);
-  return newMed;
+//Para ver de a UNA SOLA Medicina
+export const getOneMedication = async (id) => {
+    try {
+        const res = await axios.get(`${URL_API}/${id}`);
+        return res.data;
+    } 
+    catch (error) {
+        console.error(`getOneMedication ID ${id} error:`, error.message);
+        throw error; 
+    }
 };
 
-export const updateMedication = async (updated) => {
-  const items = read();
-  const idx = items.findIndex((m) => m.id === updated.id);
-  if (idx === -1) throw new Error("Medication not found");
-  items[idx] = { ...items[idx], ...updated };
-  write(items);
-  return items[idx];
+
+export const getAllMedicationByUser = async() => {
+    try {
+        const res = await axios.get(`${URL_API}/users/${userId}`);
+        return res.data; 
+    } 
+    catch(error) {
+        console.error(`getAllMedicationByUser:`, error.message);
+        throw error;
+    }
+}
+
+
+//Metodo POST para el CREATE
+export const createMedication = async(newMedication)=>{
+    try {
+        const res = await axios.post(URL_API, newMedication);
+        return res.data;
+    }
+    catch (error) {
+        console.error(`createMedication error:`, error.message);
+        throw error;
+    }
 };
 
+//Metodo PUT para ACTUALIZAR
+export const updateMedication = async (id, editedMedication) => {
+    try {
+        const res = await axios.put(`${URL_API}/${id}`, editedMedication);
+        return res.data;
+    }
+    catch (error) {
+        console.error(`updateMedication ID ${id} error:`, error.message);
+        throw error;
+    }
+}
+
+//Metodo DELETE para ELIMINAR
 export const deleteMedication = async (id) => {
-  const items = read().filter((m) => m.id !== id);
-  write(items);
-  return true;
-};
+    try {
+        const res = await axios.delete(`${URL_API}/${id}`);
+        return res.data;
+        }
+        catch (error) {
+            console.error(`deleteMedication ID ${id} error:`, error.message);
+            throw error;
+        }
+    }
+
