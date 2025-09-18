@@ -46,7 +46,7 @@ export default function Navbar() {
         >
           <NavItem to="/">Home</NavItem>
           <NavItem to="/create">Registrar Medicamentos</NavItem>
-          <NavItem to="/list">Tu día</NavItem>
+          <NavItem to="/calendar">Tu día</NavItem>
         </div>
       </div>
     </nav>
