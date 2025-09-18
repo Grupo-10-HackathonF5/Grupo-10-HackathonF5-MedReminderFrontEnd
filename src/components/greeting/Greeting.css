@@ -1,0 +1,24 @@
+.greeting {
+  background: #DDEDF8; 
+  padding: 16px;
+}
+
+.greeting__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting__text {
+  margin: 0;
+  font-weight: 700;
+  font-size: 20px;
+  color: #0D1846;
+}
+
+.greeting__date {
+  font-size: 16px;
+  color: #0D1846;
+}
