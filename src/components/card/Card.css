@@ -1,40 +1,13 @@
 .main {
-  min-height: 100vh;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
+  padding: 2rem;
 }
-
-
-.greetingSection {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;                
- }
-
-
-.text {
-  font-size: 1.125rem;
-}
-
-
-@media (min-width: 768px) {
-  .greetingSection {
-    flex-direction: row;
-  }
-
-
-  .text {
-    font-size: 1.5rem;
-  }
-}
-
 
 .cardsSection {
   display: flex;
-  flex-direction: column;
   gap: 2rem;
   width: 100%;
   justify-content: center;
@@ -54,17 +27,18 @@
   align-items: center;
   background-color: #F1EFEB;
   color: #000;
-  border-radius: 0.5rem; 
-  box-shadow: 0 3px 3px rgba(0,0,0,0.25);
+  border-radius: 0.5rem;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
   width: 100%;
+  padding: 2rem;
   text-align: center;
 }
 
 .cardTitle {
-  display: block;
-  font-size: 1.125rem;
+  margin: 0;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 0.25rem;
+
 }
 
 .checkButton {

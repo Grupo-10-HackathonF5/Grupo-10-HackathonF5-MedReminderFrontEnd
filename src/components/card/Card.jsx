@@ -11,15 +11,9 @@ const Card = () => {
         }
         setTaken(!taken);
     };
-    
+
     return (
         <main className="main">
-            <section className="greetingSection">
-                <p className="text">¡Hola Usuario!</p>
-                <p className="text">Fecha</p>
-            </section>
-
-
             <section className="cardsSection">
                 <div className="card">
                     <h2 className="cardTitle">Medicamento  500mg</h2>
@@ -32,6 +26,5 @@ const Card = () => {
         </main>
     );
 };
-
 
 export default Card;
