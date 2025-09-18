@@ -4,12 +4,8 @@
   color: #0D1846;
   width: 100%;
   bottom: 0;
-  /* Quita el margin-top: auto; */
 }
 
-
-
-/* Contenido alineado y responsivo */
 .footer__inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -58,7 +54,6 @@
   text-decoration: underline;
 }
 
-/* Copy a la derecha */
 .footer__copy {
   display: flex;
   justify-content: flex-end;
@@ -69,7 +64,6 @@
   font-size: 12px;
 }
 
-/* Móvil: apilar y centrar */
 @media (max-width: 768px) {
   .footer__inner {
     grid-template-columns: 1fr;

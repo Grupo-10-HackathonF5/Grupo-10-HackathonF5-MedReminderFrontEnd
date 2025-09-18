@@ -1,6 +1,5 @@
-/* src/components/navbar/Navbar.css */
 .navbar{
-  position: sticky;      /* se queda arriba sin tapar el header */
+  position: sticky;      
   top: 0;
   z-index: 1000;
   background: #0D1846;
@@ -20,7 +19,6 @@
   border:0; background:transparent; padding:8px; color:#fff; cursor:pointer;
 }
 
-/* Menú mobile: cuelga justo debajo de la barra */
 .menu{
   display:none; flex-direction:column; gap:6px;
   position:absolute; left:0; right:0; top:100%;   /* 👈 debajo de la navbar */
