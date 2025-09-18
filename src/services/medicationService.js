@@ -1,79 +1,25 @@
-import axios from "axios";
+// src/services/medicationService.js
 
-const URL_API= "http://localhost:8080/api/medications";
-const userId = 1
+let mockMedications = []; // Esto es temporal mientras no haya backend
 
-//Metodo GET para el READ
-//Para ver TODAS las Medicinas
-export const getAllMedication = async() => {
-    try {
-        const res = await axios.get(URL_API);
-        return res.data; 
-    } 
-    catch(error) {
-        console.error(`getAllMedications:`, error.message);
-        throw error;
-    }
-}
-
-//Para ver de a UNA SOLA Medicina
-export const getOneMedication = async (id) => {
-    try {
-        const res = await axios.get(`${URL_API}/${id}`);
-        return res.data;
-    } 
-    catch (error) {
-        console.error(`getOneMedication ID ${id} error:`, error.message);
-        throw error; 
-    }
+export const getMedications = async () => {
+  // Retorna los medicamentos actuales
+  return mockMedications;
 };
 
-
-export const getAllMedicationByUser = async() => {
-    try {
-        const res = await axios.get(`${URL_API}/users/${userId}`);
-        return res.data; 
-    } 
-    catch(error) {
-        console.error(`getAllMedicationByUser:`, error.message);
-        throw error;
-    }
-}
-
-
-//Metodo POST para el CREATE
-export const createMedication = async(newMedication)=>{
-    try {
-        const res = await axios.post(URL_API, newMedication);
-        return res.data;
-    }
-    catch (error) {
-        console.error(`createMedication error:`, error.message);
-        throw error;
-    }
+export const createMedication = async (medication) => {
+  const newMed = { ...medication, id: Date.now() };
+  mockMedications.push(newMed);
+  return newMed;
 };
 
-//Metodo PUT para ACTUALIZAR
-export const updateMedication = async (id, editedMedication) => {
-    try {
-        const res = await axios.put(`${URL_API}/${id}`, editedMedication);
-        return res.data;
-    }
-    catch (error) {
-        console.error(`updateMedication ID ${id} error:`, error.message);
-        throw error;
-    }
-}
+export const updateMedication = async (updatedMed) => {
+  mockMedications = mockMedications.map((med) =>
+    med.id === updatedMed.id ? updatedMed : med
+  );
+  return updatedMed;
+};
 
-//Metodo DELETE para ELIMINAR
 export const deleteMedication = async (id) => {
-    try {
-        const res = await axios.delete(`${URL_API}/${id}`);
-        return res.data;
-        }
-        catch (error) {
-            console.error(`deleteMedication ID ${id} error:`, error.message);
-            throw error;
-        }
-    }
-
+  mockMedications = mockMedications.filter((med) => med.id !== id);
+};

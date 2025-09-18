@@ -1,66 +1,57 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getMedications, deleteMedication } from "../../services/medicationService";
-import Card from "../../components/card/Card";
-import "./List.css";
+import React, { useState, useEffect } from 'react';
+import { getAllMedications } from '../../services/api'; // Importamos nuestra función
+import './List.css'; // Si quieres añadir estilos después
 
-const List = () => {
-  const [meds, setMeds] = useState([]);
-  const navigate = useNavigate();
+function List() {
+  // 1. Estados para guardar los datos, el estado de carga y los errores
+  const [medications, setMedications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const load = async () => {
-    const data = await getMedications();
-    setMeds(data);
-  };
+  // 2. useEffect para llamar a la API cuando el componente se monte
+  useEffect(() => {
+    const fetchMedications = async () => {
+      try {
+        const response = await getAllMedications();
+        setMedications(response.data); // Guardamos los datos en el estado
+      } catch (err) {
+        setError('No se pudieron cargar los medicamentos. ¿El backend está funcionando?');
+        console.error(err);
+      } finally {
+        setLoading(false); // Dejamos de cargar, tanto si hubo éxito como si hubo error
+      }
+    };
 
-  useEffect(() => { load(); }, []);
+    fetchMedications();
+  }, []); // El array vacío [] significa que se ejecuta solo una vez
 
-  const handleDelete = async (id) => {
-    if (confirm("¿Borrar este medicamento?")) {
-      await deleteMedication(id);
-      load();
-    }
-  };
+  // 3. Renderizado condicional
+  if (loading) {
+    return <div>Cargando medicamentos...</div>;
+  }
 
+  if (error) {
+    return <div style={{ color: 'red' }}>{error}</div>;
+  }
+
+  // 4. Renderizado de la lista de medicamentos
   return (
     <div className="medication-list">
-      <div className="medication-list__header">
-        <h1>Mis medicamentos</h1>
-        <button className="btn-primary" onClick={() => navigate("/create")}>
-          + Agregar
-        </button>
-      </div>
-
-      {meds.length === 0 ? (
-        <p className="medication-list__empty">Aún no tienes medicamentos guardados.</p>
-      ) : (
-        <ul className="medication-list__grid">
-          {meds.map((m) => (
-            <li key={m.id}>
-              <Card title={m.name}>
-                <p><strong>Dosis:</strong> {m.dosage}</p>
-                <p><strong>Concentración:</strong> {m.strength}</p>
-                <div className="row-actions">
-                  <button
-                    className="btn-secondary"
-                    onClick={() => navigate("/create", { state: { editing: m } })}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn-danger"
-                    onClick={() => handleDelete(m.id)}
-                  >
-                    Borrar
-                  </button>
-                </div>
-              </Card>
+      <h1>Mis Medicamentos</h1>
+      {medications.length > 0 ? (
+        <ul>
+          {medications.map((med) => (
+            <li key={med.id}>
+              <strong>{med.name}</strong> - {med.dosageQuantity} {med.dosageUnit}
+              <p>Notas: {med.notes || 'Sin notas'}</p>
             </li>
           ))}
         </ul>
+      ) : (
+        <p>No tienes medicamentos registrados.</p>
       )}
     </div>
   );
-};
+}
 
 export default List;
