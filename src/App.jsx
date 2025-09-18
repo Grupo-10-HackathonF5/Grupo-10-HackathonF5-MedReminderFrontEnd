@@ -1,9 +1,8 @@
 import './App.css'
 import { Toaster } from 'react-hot-toast'
 import Footer from './components/footer/Footer'
+import Header from './components/header/Header'
 import AppRoutes from './application/Router'
-import Navbar from './components/navbar/Navbar'
-import Header from './components/header/header'
 import Greeting from './components/greeting/Greeting'
 
 function App() {
@@ -11,8 +10,10 @@ function App() {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <Header />
-      <Greeting />
-      <AppRoutes />
+      <Greeting/>
+      <main className="main-content">
+        <AppRoutes />
+      </main>
       <Footer />
     </>
   )

@@ -1,25 +1,30 @@
-// src/services/medicationService.js
+const KEY = "medications:v1";
 
-let mockMedications = []; // Esto es temporal mientras no haya backend
+const read = () => JSON.parse(localStorage.getItem(KEY) || "[]");
+const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
 
-export const getMedications = async () => {
-  // Retorna los medicamentos actuales
-  return mockMedications;
-};
+export const getMedications = async () => read();
 
-export const createMedication = async (medication) => {
-  const newMed = { ...medication, id: Date.now() };
-  mockMedications.push(newMed);
+export const createMedication = async (med) => {
+  const items = read();
+  const id = crypto.randomUUID ? crypto.randomUUID() : Date.now().toString();
+  const newMed = { id, ...med };
+  items.push(newMed);
+  write(items);
   return newMed;
 };
 
-export const updateMedication = async (updatedMed) => {
-  mockMedications = mockMedications.map((med) =>
-    med.id === updatedMed.id ? updatedMed : med
-  );
-  return updatedMed;
+export const updateMedication = async (updated) => {
+  const items = read();
+  const idx = items.findIndex((m) => m.id === updated.id);
+  if (idx === -1) throw new Error("Medication not found");
+  items[idx] = { ...items[idx], ...updated };
+  write(items);
+  return items[idx];
 };
 
 export const deleteMedication = async (id) => {
-  mockMedications = mockMedications.filter((med) => med.id !== id);
+  const items = read().filter((m) => m.id !== id);
+  write(items);
+  return true;
 };

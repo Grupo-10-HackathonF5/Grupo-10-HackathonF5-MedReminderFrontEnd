@@ -1,46 +1,32 @@
-// src/components/list/MedicationList.jsx
 import React from "react";
-import './MedicationList.css';
+import "./MedicationList.css";
 
 const MedicationList = ({ medications, onAdd, onEdit, onDelete }) => {
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2 style={{ textAlign: "center", color: "#0D1846" }}>
-        Mis Medicamentos
-      </h2>
+    <div className="medication-list">
+      <h2 className="medication-list__title">Mis Medicamentos</h2>
 
-      <button
-        onClick={onAdd}
-        style={{ marginBottom: "1rem", padding: "0.5rem 1rem", cursor: "pointer" }}
-      >
+      <button onClick={onAdd} className="medication-list__add">
         ➕ Agregar medicamento
       </button>
 
       {medications.length === 0 ? (
         <p>No hay medicamentos registrados.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul>
           {medications.map((med) => (
-            <li
-              key={med.id}
-              style={{
-                marginBottom: "1rem",
-                padding: "1rem",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-              }}
-            >
+            <li key={med.id} className="medication-list__item">
               <strong>{med.name}</strong> - {med.dosage}
               <br />
               <button
                 onClick={() => onEdit(med)}
-                style={{ marginTop: "0.5rem", marginRight: "0.5rem" }}
+                className="medication-list__button"
               >
                 ✏️ Editar
               </button>
               <button
                 onClick={() => onDelete(med.id)}
-                style={{ marginTop: "0.5rem" }}
+                className="medication-list__button"
               >
                 🗑️ Borrar
               </button>

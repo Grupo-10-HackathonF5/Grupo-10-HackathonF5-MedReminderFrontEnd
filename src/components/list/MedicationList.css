@@ -1,85 +1,29 @@
-/* Contenedor principal */
+/* src/components/list/MedicationList.css */
 .medication-list {
   padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
-/* Título */
-.medication-list h2 {
+.medication-list__title {
   text-align: center;
   color: #0D1846;
-  margin-bottom: 1rem;
 }
 
-/* Mensajes */
-.medication-message {
-  background-color: #e0ffe0;
-  color: #006600;
-  padding: 0.5rem;
-  border-radius: 6px;
-  text-align: center;
+.medication-list__add {
   margin-bottom: 1rem;
-}
-
-/* Botón principal */
-.add-button {
-  display: block;
-  margin: 0 auto 1rem auto;
-  padding: 0.75rem 1.5rem;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 0.5rem 1rem;
   cursor: pointer;
 }
 
-.add-button:hover {
-  background-color: #0056b3;
-}
-
-/* Lista */
-.medication-items {
-  list-style: none;
-  padding: 0;
-}
-
-.medication-item {
+.medication-list__item {
   margin-bottom: 1rem;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #f9f9f9;
+  list-style: none;
 }
 
-/* Botones dentro de cada item */
-.item-buttons {
+.medication-list__button {
   margin-top: 0.5rem;
-}
-
-.item-buttons button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
   margin-right: 0.5rem;
-}
-
-.item-buttons button:first-child {
-  background-color: #ffc107;
-  color: #000;
-}
-
-.item-buttons button:first-child:hover {
-  background-color: #e0a800;
-}
-
-.item-buttons button:last-child {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-.item-buttons button:last-child:hover {
-  background-color: #a71d2a;
+  cursor: pointer;
 }
