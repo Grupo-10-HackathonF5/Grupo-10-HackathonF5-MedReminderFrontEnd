@@ -23,7 +23,7 @@ const Calendar = () => {
             {
                 id: 3,
                 medication: { name: "Vitamina C", dosage: "1000mg" },
-                scheduledTime: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 0),
+                scheduledTime: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 48),
             },
             {
                 id: 4,

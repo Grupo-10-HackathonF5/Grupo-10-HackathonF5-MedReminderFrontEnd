@@ -1,8 +1,0 @@
-.medication-list { padding: 16px; }
-.medication-list__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.medication-list__grid { display: grid; gap: 12px; list-style: none; padding: 0; }
-.row-actions { display: flex; gap: 8px; margin-top: 8px; }
-.btn-primary { background:#0D1846; color:#fff; border:0; padding:8px 12px; border-radius:8px; cursor:pointer; }
-.btn-secondary { background:#f3f4f6; border:0; padding:8px 12px; border-radius:8px; cursor:pointer; }
-.btn-danger { background:#e11d48; color:#fff; border:0; padding:8px 12px; border-radius:8px; cursor:pointer; }
-.medication-list__empty { opacity:.8; }
