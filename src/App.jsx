@@ -4,6 +4,7 @@ import Footer from './components/footer/Footer'
 import Header from './components/header/Header'
 import AppRoutes from './application/Router'
 import Greeting from './components/greeting/Greeting'
+import Edit from './pages/edit/Edit';
 
 function App() {
   return (

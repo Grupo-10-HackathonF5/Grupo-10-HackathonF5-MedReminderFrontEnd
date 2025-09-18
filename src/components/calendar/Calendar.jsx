@@ -1,124 +1,89 @@
-import { useEffect, useMemo, useState } from "react";
-import { getAllMedication } from "../../services/medication";
-import "./Calendar.css";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Calendar.css';
 
-export default function Calendar() {
-  const [meds, setMeds] = useState([]);
-  const [now, setNow] = useState(new Date());
+const Calendar = () => {
+  const [pastDoses, setPastDoses] = useState([]);
+  const [futureDoses, setFutureDoses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => { (async () => setMeds(await getAllMedication()))(); }, []);
-  useEffect(() => { const t = setInterval(() => setNow(new Date()), 60000); return () => clearInterval(t); }, []);
+  useEffect(() => {
+    const fetchTodayDoses = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8080/api/doses/users/1/today');
+        
+        const now = new Date();
+        const past = [];
+        const future = [];
 
-  const { past, upcoming } = useMemo(() => {
-    const today = buildDayPlanFromTimes(meds, now);
-    const past = today.filter(d => d.when <= now);
-    const upcoming = today.filter(d => d.when > now);
-    return {
-      past: past.sort((a,b) => a.when - b.when),
-      upcoming: upcoming.sort((a,b) => a.when - b.when),
-    };
-  }, [meds, now]);
-
-  return (
-    <div className="calendar">
-      <h1 className="calendar__title">Tu Agenda Diaria</h1>
-
-      <section className="calendar__section">
-        <h2>Dosis Pasadas</h2>
-        {past.length === 0 ? <p>No hay tomas pasadas.</p> : past.map(renderDose)}
-      </section>
-
-      <section className="calendar__section">
-        <h2>Dosis Futuras</h2>
-        {upcoming.length === 0 ? <p>No hay tomas futuras.</p> : upcoming.map(renderDose)}
-      </section>
-    </div>
-  );
-}
-
-/* ------ Helpers usando times[] ------ */
-
-function buildDayPlanFromTimes(meds, now) {
-  const start = startOfDay(now);
-  const end = endOfDay(now);
-  const items = [];
-
-  for (const m of meds) {
-    const times = Array.isArray(m.times) && m.times.length
-      ? m.times
-      : fallbackTimes(m); // compat con modelo viejo
-
-    for (const t of times) {
-      const when = toTodayDate(t, start); // Date de hoy a HH:MM
-      if (when >= start && when <= end) {
-        items.push({
-          id: `${m.id}-${t}`,
-          when,
-          name: m.name,
-          strength: m.strength,
-          dosage: m.dosage,
+        response.data.forEach(dose => {
+          const doseTime = new Date(dose.scheduledDateTime);
+          if (doseTime < now) {
+            past.push(dose);
+          } else {
+            future.push(dose);
+          }
         });
+
+        setPastDoses(past);
+        setFutureDoses(future);
+        
+      } catch (apiError) {
+        console.error("Error al cargar la agenda diaria:", apiError);
+        setError("No se pudo cargar la agenda. Inténtalo de nuevo más tarde.");
+      } finally {
+        setLoading(false);
       }
-    }
-  }
-  return items;
-}
+    };
 
-function toTodayDate(hhmm, dayStart) {
-  const [hh="08", mm="00"] = String(hhmm).split(":");
-  const d = new Date(dayStart);
-  d.setHours(parseInt(hh,10), parseInt(mm,10), 0, 0);
-  return d;
-}
+    fetchTodayDoses();
+  }, []);
 
-/* ---- Fallback para items antiguos sin times[] ---- */
-function fallbackTimes(med) {
-  // 1) si hay time → úsalo
-  if (med.time) return [med.time];
+  const formatTime = (dateTimeString) => {
+    const date = new Date(dateTimeString);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
 
-  // 2) si hay interval "8h" y time → genera varias
-  const match = /^(\d+)\s*h$/.exec((med.interval || "").trim());
-  if (match && med.time) {
-    const step = Number(match[1]);
-    const arr = [med.time];
-    let [h, m] = med.time.split(":").map(Number);
-    while (h + step < 24) {
-      h += step;
-      arr.push(`${String(h).padStart(2,"0")}:${String(m||0).padStart(2,"0")}`);
-    }
-    return arr;
+  if (loading) {
+    return <p>Cargando tu agenda...</p>;
   }
 
-  // 3) si hay frequency numérica y time → repartimos aproximado
-  const freq = Number((med.frequency || "").replace(/[^\d]/g, ""));
-  if (freq && med.time) {
-    const base = med.time;
-    const arr = [base];
-    const step = Math.floor(24 / freq);
-    let [h, m] = base.split(":").map(Number);
-    for (let i = 1; i < freq; i++) {
-      const nh = (h + step * i) % 24;
-      arr.push(`${String(nh).padStart(2,"0")}:${String(m||0).padStart(2,"0")}`);
-    }
-    arr.sort();
-    return arr;
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
   }
 
-  return ["08:00"];
-}
-
-/* ---- utilidades ---- */
-function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
-function endOfDay(d)   { const x = new Date(d); x.setHours(23,59,59,999); return x; }
-
-function renderDose(d) {
-  const hh = d.when.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
   return (
-    <div key={d.id} className="dose">
-      <div className="dose__time">{hh}</div>
-      <div className="dose__info">
-        <strong>{d.name}</strong> — {d.strength} — {d.dosage}
-      </div>
+    <div>
+      <h2>Tu Agenda Diaria</h2>
+
+      {/* Sección de Dosis Pasadas */}
+      <h3>Dosis Pasadas</h3>
+      {pastDoses.length > 0 ? (
+        pastDoses.map(dose => (
+          <div key={dose.doseId} style={{ backgroundColor: '#ffdddd', padding: '10px', margin: '5px 0' }}>
+ 
+            <strong>{formatTime(dose.scheduledDateTime)}</strong> - {dose.medicationName}
+          </div>
+        ))
+      ) : (
+        <p>No tienes dosis pasadas para hoy.</p>
+      )}
+
+      {/* Sección de Dosis Futuras */}
+      <h3>Dosis Futuras</h3>
+      {futureDoses.length > 0 ? (
+        futureDoses.map(dose => (
+          <div key={dose.doseId} style={{ backgroundColor: '#ddffdd', padding: '10px', margin: '5px 0' }}>
+            <strong>{formatTime(dose.scheduledDateTime)}</strong> - {dose.medicationName}
+          </div>
+        ))
+      ) : (
+        <p>No hay tomas futuras para hoy.</p>
+      )}
     </div>
   );
-}
+};
+
+export default Calendar;

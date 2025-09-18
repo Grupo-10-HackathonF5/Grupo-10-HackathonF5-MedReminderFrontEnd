@@ -1,9 +1,0 @@
-.med-form { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:16px; }
-.form-step { display:grid; gap:14px; }
-.field { display:grid; gap:6px; }
-.field input { padding:10px 12px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; }
-.error { color:#b91c1c; font-size:12px; margin-top:-4px; }
-.actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
-.btn-primary { background:#0D1846; color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; }
-.btn-secondary { background:#f3f4f6; color:#111827; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; }
-.btn-danger { background:#e11d48; color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; }

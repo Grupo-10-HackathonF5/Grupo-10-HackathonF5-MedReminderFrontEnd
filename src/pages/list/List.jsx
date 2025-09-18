@@ -1,57 +1,123 @@
 import React, { useState, useEffect } from 'react';
-import { getAllMedications } from '../../services/api'; // Importamos nuestra función
-import './List.css'; // Si quieres añadir estilos después
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import './List.css';
+import toast from 'react-hot-toast';
 
-function List() {
-  // 1. Estados para guardar los datos, el estado de carga y los errores
-  const [medications, setMedications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const List = () => {
+    const [medications, setMedications] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  // 2. useEffect para llamar a la API cuando el componente se monte
-  useEffect(() => {
-    const fetchMedications = async () => {
-      try {
-        const response = await getAllMedications();
-        setMedications(response.data); // Guardamos los datos en el estado
-      } catch (err) {
-        setError('No se pudieron cargar los medicamentos. ¿El backend está funcionando?');
-        console.error(err);
-      } finally {
-        setLoading(false); // Dejamos de cargar, tanto si hubo éxito como si hubo error
-      }
+    useEffect(() => {
+        const fetchMedications = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                const response = await axios.get('http://localhost:8080/api/medications/users/1');
+                setMedications(response.data);
+            } catch (apiError) {
+                console.error('Error al cargar los medicamentos:', apiError);
+                setError('No se pudieron cargar los medicamentos. Inténtalo de nuevo más tarde.');
+                toast.error('Error al cargar los medicamentos');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMedications();
+    }, []);
+
+    const handleDelete = async (medicationId, medicationName) => {
+        toast((t) => (
+            <div>
+                <p>¿Estás seguro de que quieres eliminar "{medicationName}"?</p>
+                <div style={{ marginTop: '0.5rem' }}>
+                    <button
+                        onClick={async () => {
+                            try {
+                                await axios.delete(`http://localhost:8080/api/medications/${medicationId}`);
+                                setMedications(medications.filter(med => med.id !== medicationId));
+                                toast.success(`"${medicationName}" ha sido eliminado.`);
+                            } catch (err) {
+                                console.error(err);
+                                toast.error('No se pudo eliminar el medicamento.');
+                            }
+                            toast.dismiss(t.id);
+                        }}
+                        style={{
+                            marginRight: '0.5rem',
+                            alignContent: 'center',
+                            backgroundColor: '#5BAEE4',
+                            color: 'black',
+                            border: 'none',
+                            padding: '0.3rem 0.6rem',
+                            borderRadius: '0.25rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Sí
+                    </button>
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        style={{
+                            backgroundColor: '#5BAEE4',
+                            alignContent: 'center',
+                            color: 'black',
+                            border: 'none',
+                            padding: '0.3rem 0.6rem',
+                            borderRadius: '0.25rem',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        No
+                    </button>
+                </div>
+            </div>
+        ));
     };
 
-    fetchMedications();
-  }, []); // El array vacío [] significa que se ejecuta solo una vez
+    if (loading) return <p>Cargando medicamentos...</p>;
+    if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-  // 3. Renderizado condicional
-  if (loading) {
-    return <div>Cargando medicamentos...</div>;
-  }
+    return (
+        <div>
+            <h1>Mis Medicamentos</h1>
+            {medications.length === 0 ? (
+                <p>No tienes ningún medicamento guardado.</p>
+            ) : (
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Dosis</th>
+                            <th>Notas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {medications.map((med) => (
+                            <tr key={med.id}>
+                                <td>{med.name}</td>
+                                <td>{med.dosageQuantity} {med.dosageUnit}</td>
+                                <td>{med.notes}</td>
+                                <td>
+                                    <button className='delete-btn'
+                                        onClick={() => handleDelete(med.id, med.name)}>
+                                        Eliminar
+                                    </button>
 
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
+                                    <Link to={`/medicamentos/edit/${med.id}`}>
+                                        <button className='edit-btn'>Editar</button>
+                                    </Link>
 
-  // 4. Renderizado de la lista de medicamentos
-  return (
-    <div className="medication-list">
-      <h1>Mis Medicamentos</h1>
-      {medications.length > 0 ? (
-        <ul>
-          {medications.map((med) => (
-            <li key={med.id}>
-              <strong>{med.name}</strong> - {med.dosageQuantity} {med.dosageUnit}
-              <p>Notas: {med.notes || 'Sin notas'}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No tienes medicamentos registrados.</p>
-      )}
-    </div>
-  );
-}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
+    );
+};
 
 export default List;
