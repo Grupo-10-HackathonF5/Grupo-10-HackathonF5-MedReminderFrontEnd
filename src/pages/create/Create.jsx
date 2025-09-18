@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Form from "../../components/form/Form";
-import { createMedication, updateMedication } from "../../services/medicationService";
+import { createMedication, updateMedication } from "../../services/medication";
 
 export default function Create() {
   const navigate = useNavigate();

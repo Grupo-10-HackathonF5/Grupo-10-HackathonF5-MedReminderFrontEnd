@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "./Form.css";
 
-export default function Form({ onSubmit, onCancel, initialData = {} }) {
+export default function Form({ onSubmit, onCancel, initialData = {}, userId = 42 }) {
   const [step, setStep] = useState(1);
 
   const {
@@ -13,11 +13,12 @@ export default function Form({ onSubmit, onCancel, initialData = {} }) {
   } = useForm({
     defaultValues: {
       name: "",
-      dosage: "",
-      strength: "",
+      dosageQuantity: "",
+      dosageUnit: "",
       frequency: "",
       interval: "",
       time: "",
+      notes: "",
       ...initialData,
     },
   });
@@ -26,7 +27,23 @@ export default function Form({ onSubmit, onCancel, initialData = {} }) {
     Object.entries(initialData || {}).forEach(([k, v]) => setValue(k, v));
   }, [initialData, setValue]);
 
-  const submitAll = (values) => onSubmit?.(values);
+  const submitAll = (values) => {
+    // Parsear cantidad de la unidad si el usuario escribió "1 píldora"
+    const parsedQuantity = parseInt(values.dosageQuantity) || 1;
+    const payload = {
+      userId,
+      name: values.name,
+      dosageQuantity: parsedQuantity,
+      dosageUnit: values.dosageUnit || "", 
+      frequency: values.frequency || "",
+      interval: values.interval || "",
+      time: values.time || "",
+      notes: values.notes || "",
+      active: true,
+    };
+
+    onSubmit?.(payload);
+  };
 
   return (
     <form className="med-form" onSubmit={handleSubmit(submitAll)} noValidate>
@@ -36,28 +53,41 @@ export default function Form({ onSubmit, onCancel, initialData = {} }) {
 
           <div className="field">
             <label htmlFor="name">Nombre</label>
-            <input id="name" placeholder="Aspirina"
-              {...register("name", { required: "El nombre es obligatorio" })} />
+            <input
+              id="name"
+              placeholder="Aspirina"
+              {...register("name", { required: "El nombre es obligatorio" })}
+            />
             {errors.name && <p className="error">{errors.name.message}</p>}
           </div>
 
           <div className="field">
-            <label htmlFor="dosage">Posología / Dosis</label>
-            <input id="dosage" placeholder="1 píldora al día"
-              {...register("dosage", { required: "La dosis es obligatoria" })} />
-            {errors.dosage && <p className="error">{errors.dosage.message}</p>}
+            <label htmlFor="dosageQuantity">Cantidad</label>
+            <input
+              id="dosageQuantity"
+              placeholder="1"
+              {...register("dosageQuantity", { required: "La cantidad es obligatoria" })}
+            />
+            {errors.dosageQuantity && <p className="error">{errors.dosageQuantity.message}</p>}
           </div>
 
           <div className="field">
-            <label htmlFor="strength">Gramaje / concentración</label>
-            <input id="strength" placeholder="500 mg"
-              {...register("strength", { required: "El gramaje es obligatorio" })} />
-            {errors.strength && <p className="error">{errors.strength.message}</p>}
+            <label htmlFor="dosageUnit">Unidad / Gramaje</label>
+            <input
+              id="dosageUnit"
+              placeholder="mg / píldora"
+              {...register("dosageUnit", { required: "La unidad es obligatoria" })}
+            />
+            {errors.dosageUnit && <p className="error">{errors.dosageUnit.message}</p>}
           </div>
 
           <div className="actions">
-            <button type="button" className="btn-secondary" onClick={onCancel}>Cancelar</button>
-            <button type="button" className="btn-primary" onClick={() => setStep(2)}>Siguiente</button>
+            <button type="button" className="btn-secondary" onClick={onCancel}>
+              Cancelar
+            </button>
+            <button type="button" className="btn-primary" onClick={() => setStep(2)}>
+              Siguiente
+            </button>
           </div>
         </div>
       )}
@@ -68,27 +98,32 @@ export default function Form({ onSubmit, onCancel, initialData = {} }) {
 
           <div className="field">
             <label htmlFor="frequency">Frecuencia</label>
-            <input id="frequency" placeholder="2 veces al día / c/8 horas"
-              {...register("frequency", { required: "La frecuencia es obligatoria" })} />
-            {errors.frequency && <p className="error">{errors.frequency.message}</p>}
+            <input
+              id="frequency"
+              placeholder="2 veces al día / c/8 horas"
+              {...register("frequency")}
+            />
           </div>
 
           <div className="field">
             <label htmlFor="interval">Intervalo entre tomas</label>
-            <input id="interval" placeholder="8h"
-              {...register("interval", { required: "El intervalo es obligatorio" })} />
-            {errors.interval && <p className="error">{errors.interval.message}</p>}
+            <input id="interval" placeholder="8h" {...register("interval")} />
           </div>
 
           <div className="field">
             <label htmlFor="time">Hora de la primera toma</label>
-            <input id="time" type="time"
-              {...register("time", { required: "La hora es obligatoria" })} />
-            {errors.time && <p className="error">{errors.time.message}</p>}
+            <input id="time" type="time" {...register("time")} />
+          </div>
+
+          <div className="field">
+            <label htmlFor="notes">Notas adicionales</label>
+            <input id="notes" placeholder="Tomar con comida" {...register("notes")} />
           </div>
 
           <div className="actions">
-            <button type="button" className="btn-secondary" onClick={() => setStep(1)}>Volver</button>
+            <button type="button" className="btn-secondary" onClick={() => setStep(1)}>
+              Volver
+            </button>
             <button type="submit" className="btn-primary">
               {initialData?.id ? "Actualizar" : "Guardar"}
             </button>
@@ -98,3 +133,4 @@ export default function Form({ onSubmit, onCancel, initialData = {} }) {
     </form>
   );
 }
+

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { getMedications } from "../../services/medicationService";
+import { getAllMedication } from "../../services/medication";
 import "./Calendar.css";
 
 export default function Calendar() {
   const [meds, setMeds] = useState([]);
   const [now, setNow] = useState(new Date());
 
-  useEffect(() => { (async () => setMeds(await getMedications()))(); }, []);
+  useEffect(() => { (async () => setMeds(await getAllMedication()))(); }, []);
   useEffect(() => { const t = setInterval(() => setNow(new Date()), 60000); return () => clearInterval(t); }, []);
 
   const { past, upcoming } = useMemo(() => {
