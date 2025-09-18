@@ -1,48 +1,72 @@
-.calendarContainer {
-    padding: 20px;
-    font-family: sans-serif;
+/* Contenedor principal */
+.calendar {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-.calendarSection {
-    margin-top: 20px;
+/* Título principal */
+.calendar__title {
+  text-align: center;
+  margin: 0 0 24px 0;
+  color: #0D1846;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.calendarCard {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #f0f0f0;
-    padding: 2rem;
-    border-radius: 10px;
-    margin-bottom: 1rem;
+/* Cada sección (pasadas, futuras) */
+.calendar__section {
+  margin-bottom: 32px;
 }
 
-.calendarCard.past {
-    background: #e0e0e0;
-    opacity: 0.7;
+.calendar__section h2 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #0D1846;
+  border-bottom: 2px solid #DDEDF8;
+  padding-bottom: 4px;
 }
 
-.calendarCard.future {
-    background: #DDEDF8;
+/* Estilo de cada dosis */
+.dose {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f3f4f6; /* gris claro por defecto */
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  transition: background 0.3s ease;
 }
 
-.time {
-    width: 60px;
-    font-weight: bold;
+/* Diferenciar pasadas y futuras */
+.calendar__section:first-of-type .dose {
+  background: #f9dcdc; /* rojo claro para pasadas */
+}
+.calendar__section:last-of-type .dose {
+  background: #dceafc; /* azul claro para futuras */
 }
 
-.info {
-    flex: 1;
-    margin-left: 1rem;
+/* Hora de la toma */
+.dose__time {
+  font-weight: 800;
+  font-size: 16px;
+  width: 60px;
+  text-align: right;
+  color: #0D1846;
 }
 
-h2 {
-    margin-top: 5rem;
-    margin-bottom: 1rem;
-    text-align: center;
+/* Texto de la info */
+.dose__info {
+  flex: 1;
+  font-size: 14px;
+  color: #111827;
 }
 
-h3 {
-    margin-top: 5rem;
-    margin-bottom: 1rem;
+/* Hover */
+.dose:hover {
+  background: #e5e7eb;
+}
+.calendar__section:last-of-type .dose:hover {
+  background: #cfe2ff;
 }
