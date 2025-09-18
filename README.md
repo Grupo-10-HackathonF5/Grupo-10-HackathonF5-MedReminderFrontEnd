@@ -34,7 +34,10 @@ cd Grupo-10-HackathonF5
 # 3. Install the dependencies
 npm install
 
-# 4. Start the development server
+# 4. Install react-router-dom version 6
+npm install react-router-dom@6
+
+# 5. Start the development server
 npm run dev
 
 ```
