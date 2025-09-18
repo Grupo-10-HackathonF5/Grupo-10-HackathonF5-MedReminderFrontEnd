@@ -30,7 +30,7 @@ export const getOnePosology = async (id) => {
 
 export const getActivePosologies = async() => {
     try {
-        const res = await axios.get(URL_API/active);
+        const res = await axios.get(`${URL_API}/users/${userId}/active`);
         return res.data; 
     } 
     catch(error) {
