@@ -1,57 +1,83 @@
 import React, { useState, useEffect } from 'react';
-import { getAllMedications } from '../../services/api'; // Importamos nuestra función
-import './List.css'; // Si quieres añadir estilos después
+import axios from 'axios';
+import { Link } from 'react-router-dom'; 
 
-function List() {
-  // 1. Estados para guardar los datos, el estado de carga y los errores
+const List = () => {
   const [medications, setMedications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 2. useEffect para llamar a la API cuando el componente se monte
   useEffect(() => {
     const fetchMedications = async () => {
       try {
-        const response = await getAllMedications();
-        setMedications(response.data); // Guardamos los datos en el estado
-      } catch (err) {
-        setError('No se pudieron cargar los medicamentos. ¿El backend está funcionando?');
-        console.error(err);
+        setLoading(true);
+        setError(null);
+        const response = await axios.get('http://localhost:8080/api/medications/users/1');
+        setMedications(response.data);
+      } catch (apiError) {
+        console.error('Error al cargar los medicamentos:', apiError);
+        setError('No se pudieron cargar los medicamentos. Inténtalo de nuevo más tarde.');
       } finally {
-        setLoading(false); // Dejamos de cargar, tanto si hubo éxito como si hubo error
+        setLoading(false);
       }
     };
-
     fetchMedications();
-  }, []); // El array vacío [] significa que se ejecuta solo una vez
+  }, []);
 
-  // 3. Renderizado condicional
-  if (loading) {
-    return <div>Cargando medicamentos...</div>;
-  }
+  const handleDelete = async (medicationId, medicationName) => {
+    if (window.confirm(`¿Estás seguro de que quieres eliminar "${medicationName}"?`)) {
+      try {
+        await axios.delete(`http://localhost:8080/api/medications/${medicationId}`);
+        setMedications(medications.filter(med => med.id !== medicationId));
+        alert(`"${medicationName}" ha sido eliminado.`);
+      } catch (deleteError) {
+        console.error('Error al eliminar el medicamento:', deleteError);
+        alert('No se pudo eliminar el medicamento.');
+      }
+    }
+  };
 
-  if (error) {
-    return <div style={{ color: 'red' }}>{error}</div>;
-  }
+  if (loading) return <p>Cargando medicamentos...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-  // 4. Renderizado de la lista de medicamentos
   return (
-    <div className="medication-list">
+    <div>
       <h1>Mis Medicamentos</h1>
-      {medications.length > 0 ? (
-        <ul>
-          {medications.map((med) => (
-            <li key={med.id}>
-              <strong>{med.name}</strong> - {med.dosageQuantity} {med.dosageUnit}
-              <p>Notas: {med.notes || 'Sin notas'}</p>
-            </li>
-          ))}
-        </ul>
+      {medications.length === 0 ? (
+        <p>No tienes ningún medicamento guardado.</p>
       ) : (
-        <p>No tienes medicamentos registrados.</p>
+        <table border="1" style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Dosis</th>
+              <th>Notas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {medications.map((med) => (
+              <tr key={med.id}>
+                <td>{med.name}</td>
+                <td>{med.dosageQuantity} {med.dosageUnit}</td>
+                <td>{med.notes}</td>
+                <td>
+                  <button onClick={() => handleDelete(med.id, med.name)}>
+                    Eliminar
+                  </button>
+
+                  <Link to={`/medicamentos/edit/${med.id}`}>
+                    <button>Editar</button>
+                  </Link>
+
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
-}
+};
 
 export default List;
