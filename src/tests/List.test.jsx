@@ -17,7 +17,6 @@ describe('Componente List', () => {
       { id: 2, name: 'Loratadina', dosageQuantity: 10, dosageUnit: 'mg', notes: 'Por la mañana' },
     ];
 
-
     axios.get.mockResolvedValue({ data: mockMedications });
 
     render(
